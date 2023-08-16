@@ -9,10 +9,10 @@ article h1 {
   font-weight: bold;
 }
 
-artcile p {
+article p {
   margin-bottom: 24px;
 }
 
-artcile p:last-of-type {
+article p:last-of-type {
   margin-bottom: 0;
 }

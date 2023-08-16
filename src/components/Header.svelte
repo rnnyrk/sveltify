@@ -10,7 +10,6 @@
     const data = new FormData(this);
 
     const url = data.get('url') as string;
-
     const prompt = `Make a ${$filter.paragraphs} paragraph summary of this article ${url}, use markdown syntax with p texts for paragraphs and include the title above the summary`;
 
     const response = await fetch('/api/gpt', {
