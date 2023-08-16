@@ -7,9 +7,16 @@ const COMPLETION_API =
   'https://iogpt-api-management-service.azure-api.net/openai/api/proxy/openai/chat/completions';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { prompt, amountOfParagraphs } = await request.json();
+  const { prompt, amountOfParagraphs, toneOfVoice } = await request.json();
 
-  const maxTokens = 200 * amountOfParagraphs;
+  const max_tokens = 200 * amountOfParagraphs;
+
+  let temperature = 0.9;
+  if (toneOfVoice === 'strict') {
+    temperature = 0.1;
+  } else if (toneOfVoice === 'creative') {
+    temperature = 1.4;
+  }
 
   const result = await fetch(COMPLETION_API, {
     method: 'POST',
@@ -19,7 +26,8 @@ export const POST: RequestHandler = async ({ request }) => {
     },
     body: JSON.stringify({
       model: 'gpt-35-turbo',
-      max_tokens: maxTokens,
+      max_tokens,
+      temperature,
       messages: [
         {
           role: 'user',

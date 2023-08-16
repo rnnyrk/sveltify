@@ -8,9 +8,11 @@ export const summary = writable<
 export type FilterProps = {
   paragraphs: number;
   tone: 'strict' | 'neutral' | 'creative';
+  language: 'en' | 'nl';
 };
 
 export const filter = writable<FilterProps>({
   paragraphs: 1,
-  tone: 'neutral'
+  tone: 'neutral',
+  language: 'en'
 });

@@ -10,13 +10,14 @@
     const data = new FormData(this);
 
     const url = data.get('url') as string;
-    const prompt = `Make a ${$filter.paragraphs} paragraph summary of this article ${url}, use markdown syntax with p texts for paragraphs and include the title above the summary`;
+    const prompt = `Make a ${$filter.paragraphs} paragraph summary of this article ${url}, use markdown syntax with <p> tags for paragraphs and include the title above the summary. Do everything in ${$filter.langauge}`;
 
     const response = await fetch('/api/gpt', {
       method: 'POST',
       body: JSON.stringify({
         prompt,
-        amountOfParagraphs: $filter.paragraphs
+        amountOfParagraphs: $filter.paragraphs,
+        toneOfVoice: $filter.tone
       }),
       headers: {
         'content-type': 'application/json'
