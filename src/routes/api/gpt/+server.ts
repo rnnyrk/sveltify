@@ -7,7 +7,9 @@ const COMPLETION_API =
   'https://iogpt-api-management-service.azure-api.net/openai/api/proxy/openai/chat/completions';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { prompt } = await request.json();
+  const { prompt, amountOfParagraphs } = await request.json();
+
+  const maxTokens = 200 * amountOfParagraphs;
 
   const result = await fetch(COMPLETION_API, {
     method: 'POST',
@@ -17,7 +19,7 @@ export const POST: RequestHandler = async ({ request }) => {
     },
     body: JSON.stringify({
       model: 'gpt-35-turbo',
-      max_tokens: 20,
+      max_tokens: maxTokens,
       messages: [
         {
           role: 'user',

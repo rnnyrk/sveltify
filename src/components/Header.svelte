@@ -1,21 +1,23 @@
 <script lang="ts">
-  import { cn } from '$lib';
-  import { useMachine } from '@xstate/svelte';
-  import { createMachine } from 'xstate';
-  import { summary } from '$lib/stores';
+  import { summary, filter } from '$lib/stores';
   import type { openai } from 'chatgpt';
+  import FilterBar from './FilterBar.svelte';
 
+  let isFilterOpen = false;
   let result: undefined | openai.CreateChatCompletionResponse;
 
   async function runGpt() {
     const data = new FormData(this);
 
-    const prompt = `Summarize the article in this link ${data.get('url')}`;
+    const url = data.get('url') as string;
+
+    const prompt = `Make a ${$filter.paragraphs} paragraph summary of this article ${url}, use markdown syntax with p texts for paragraphs and include the title above the summary`;
 
     const response = await fetch('/api/gpt', {
       method: 'POST',
       body: JSON.stringify({
-        prompt
+        prompt,
+        amountOfParagraphs: $filter.paragraphs
       }),
       headers: {
         'content-type': 'application/json'
@@ -25,25 +27,6 @@
     result = await response.json();
     $summary = result;
   }
-
-  const toggleMachine = createMachine({
-    id: 'toggle',
-    initial: 'inactive',
-    states: {
-      inactive: {
-        on: {
-          TOGGLE: 'active'
-        }
-      },
-      active: {
-        on: {
-          TOGGLE: 'inactive'
-        }
-      }
-    }
-  });
-
-  const { state: toggleState, send: setToggle } = useMachine(toggleMachine);
 </script>
 
 <header
@@ -52,7 +35,7 @@
   <div class="flex items-center">
     <button
       class="flex items-center justify-center h-10 w-10 bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
-      on:click={() => setToggle('TOGGLE')}
+      on:click={() => (isFilterOpen = !isFilterOpen)}
     >
       <svg
         width="18"
@@ -92,7 +75,7 @@
     </form>
   </div>
 
-  {#if $toggleState.value === 'active'}
-    <div class="w-full mt-4">Subheader</div>
+  {#if isFilterOpen}
+    <FilterBar />
   {/if}
 </header>
