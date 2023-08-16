@@ -10,6 +10,7 @@
   let result: undefined | openai.CreateChatCompletionResponse;
 
   async function runGpt() {
+    isFilterOpen = false;
     $summary.state = 'loading';
     const data = new FormData(this);
 
@@ -49,10 +50,14 @@
 >
   <div class="flex items-center">
     <button
-      class="flex items-center justify-center h-10 w-10 bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
+      class="flex items-center justify-center h-12 w-12 bg-gray-300 hover:bg-gray-200 p-2 rounded-md disabled:bg-gray-200 disabled:cursor-not-allowed"
+      disabled={$summary.state === 'loading'}
       on:click={() => (isFilterOpen = !isFilterOpen)}
     >
-      <FilterSvg />
+      <FilterSvg
+        width={24}
+        height={24}
+      />
     </button>
 
     <form
@@ -63,9 +68,10 @@
       <input
         type="text"
         name="url"
-        class="w-full p-2 mx-4 rounded-md bg-gray-100"
+        class="w-full h-12 p-3 mx-4 rounded-md bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed"
         placeholder="Fill in a url..."
         required
+        disabled={$summary.state === 'loading'}
       />
 
       <button
@@ -73,14 +79,17 @@
         type="submit"
         class={cn(
           'py-2 px-4 font-bold rounded-md bg-blue-200 hover:bg-blue-400 transition-colors',
-          'disabled:bg-gray-600 disabled:cursor-not-allowed',
+          'disabled:bg-gray-200 disabled:cursor-not-allowed',
           {
             'bg-red-400': $summary.state === 'error'
           }
         )}
       >
         {#if $summary.state === 'loading'}
-          <LoadingSvg />
+          <LoadingSvg
+            width={30}
+            height={30}
+          />
         {:else}
           Summarize
         {/if}

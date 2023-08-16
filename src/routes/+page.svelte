@@ -7,7 +7,12 @@
 {#if $summary.state !== 'idle'}
   <article class="max-w-[40rem] mt-8 mx-auto p-8 bg-gray-100 rounded-lg">
     {#if $summary.state === 'loading'}
-      <LoadingSvg />
+      <div class="w-full flex justify-center">
+        <LoadingSvg
+          width={100}
+          height={100}
+        />
+      </div>
     {:else if $summary.state === 'success' && $summary.result}
       <SvelteMarkdown source={$summary.result.choices[0].message?.content} />
     {/if}
