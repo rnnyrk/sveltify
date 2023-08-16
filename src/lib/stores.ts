@@ -1,11 +1,17 @@
 import { writable } from 'svelte/store';
 import type { openai } from 'chatgpt';
 
-export const summary = writable<
-  undefined | openai.CreateChatCompletionResponse
->(undefined);
+type SummaryProps = {
+  result: undefined | openai.CreateChatCompletionResponse;
+  state: 'idle' | 'loading' | 'error' | 'success';
+};
 
-export type FilterProps = {
+export const summary = writable<SummaryProps>({
+  result: undefined,
+  state: 'idle'
+});
+
+type FilterProps = {
   paragraphs: number;
   tone: 'strict' | 'neutral' | 'creative';
   language: 'en' | 'nl';
