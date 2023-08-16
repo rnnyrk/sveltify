@@ -1,10 +1,9 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler, RequestEvent } from './$types';
 
-import { IO_GPT_KEY } from '$env/static/private';
+import { GPT_URL, GPT_KEY } from '$env/static/private';
 
-const COMPLETION_API =
-  'https://iogpt-api-management-service.azure-api.net/openai/api/proxy/openai/chat/completions';
+const COMPLETION_API = `${GPT_URL}/api/proxy/openai/chat/completions`;
 
 export const POST: RequestHandler = async ({ request }) => {
   const { prompt, amountOfParagraphs, toneOfVoice } = await request.json();
@@ -22,7 +21,7 @@ export const POST: RequestHandler = async ({ request }) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      ['iO-GPT-Subscription-Key']: IO_GPT_KEY
+      ['iO-GPT-Subscription-Key']: GPT_KEY
     },
     body: JSON.stringify({
       model: 'gpt-35-turbo',
